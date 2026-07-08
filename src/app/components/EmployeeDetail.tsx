@@ -13,6 +13,7 @@ import {
   MoreVertical,
   HandCoins
 } from 'lucide-react';
+import { PageHeader, SecondaryButton, PrimaryButton } from './hb/listing';
 
 interface Employee {
   id: string;
@@ -65,8 +66,74 @@ export default function EmployeeDetail({ employee, onBack, onEdit, onDelete }: E
   return (
     <div className="p-5 md:p-6 bg-transparent dark:bg-neutral-950 px-[8px] py-[8px]">
       <div className="max-w-[100%] mx-auto">
+        {/* PAGE HEADER & BREADCRUMBS */}
+        <PageHeader
+          pageId="sample-design"
+          action="view"
+          itemName={employee.name}
+        >
+          <SecondaryButton icon={ArrowLeft} onClick={onBack}>
+            Back
+          </SecondaryButton>
+          <PrimaryButton icon={Edit} onClick={() => onEdit(employee)}>
+            Edit Profile
+          </PrimaryButton>
+          <div className="relative">
+            <button
+              onClick={() => setShowMoreMenu(!showMoreMenu)}
+              className="w-10 h-10 flex items-center justify-center border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
+              title="More Actions"
+            >
+              <MoreVertical className="w-5 h-5 text-neutral-700 dark:text-neutral-300" />
+            </button>
+            {showMoreMenu && (
+              <>
+                <div 
+                  className="fixed inset-0 z-10" 
+                  onClick={() => setShowMoreMenu(false)}
+                />
+                <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg z-20 overflow-hidden">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('Change Hierarchy');
+                      setShowMoreMenu(false);
+                    }}
+                    className="w-full px-4 py-2.5 text-left text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors flex items-center gap-3 text-neutral-700 dark:text-neutral-300"
+                  >
+                    <Users className="w-4 h-4" />
+                    <span>Change Hierarchy</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('Change Job Status');
+                      setShowMoreMenu(false);
+                    }}
+                    className="w-full px-4 py-2.5 text-left text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors flex items-center gap-3 text-neutral-700 dark:text-neutral-300"
+                  >
+                    <Briefcase className="w-4 h-4" />
+                    <span>Change Job Status</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(employee);
+                      setShowMoreMenu(false);
+                    }}
+                    className="w-full px-4 py-2.5 text-left text-sm hover:bg-error-50 dark:hover:bg-error-950 transition-colors flex items-center gap-3 text-error-600 dark:text-error-400 border-t border-neutral-200 dark:border-neutral-800"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    <span>Delete Employee</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </PageHeader>
+
         {/* PROFILE HEADER SECTION */}
-        <div className="mb-6">
+        <div className="mb-6 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-5 shadow-sm">
           <div className="flex items-start justify-between">
             {/* Left Side - Employee Info */}
             <div className="flex-1">
@@ -120,83 +187,6 @@ export default function EmployeeDetail({ employee, onBack, onEdit, onDelete }: E
                   <span className="text-xs text-neutral-600 dark:text-neutral-400">Joined {formatDate(employee.joinDate)}</span>
                 </span>
               </div>
-            </div>
-
-            {/* Right Side - Action Buttons */}
-            <div className="flex items-center gap-2">
-              {/* Edit Button */}
-              <button
-                onClick={() => onEdit(employee)}
-                className="w-9 h-9 flex items-center justify-center border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-                title="Edit Employee"
-              >
-                <Edit className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
-              </button>
-
-              {/* More Actions Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowMoreMenu(!showMoreMenu)}
-                  className="w-9 h-9 flex items-center justify-center border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-                  title="More Actions"
-                >
-                  <MoreVertical className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
-                </button>
-
-                {/* More Actions Menu */}
-                {showMoreMenu && (
-                  <>
-                    <div 
-                      className="fixed inset-0 z-10" 
-                      onClick={() => setShowMoreMenu(false)}
-                    />
-                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg z-20 overflow-hidden">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Change Hierarchy');
-                          setShowMoreMenu(false);
-                        }}
-                        className="w-full px-4 py-2.5 text-left text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors flex items-center gap-3 text-neutral-700 dark:text-neutral-300"
-                      >
-                        <Users className="w-4 h-4" />
-                        <span>Change Hierarchy</span>
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Change Job Status');
-                          setShowMoreMenu(false);
-                        }}
-                        className="w-full px-4 py-2.5 text-left text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors flex items-center gap-3 text-neutral-700 dark:text-neutral-300"
-                      >
-                        <Briefcase className="w-4 h-4" />
-                        <span>Change Job Status</span>
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onDelete(employee);
-                          setShowMoreMenu(false);
-                        }}
-                        className="w-full px-4 py-2.5 text-left text-sm hover:bg-error-50 dark:hover:bg-error-950 transition-colors flex items-center gap-3 text-error-600 dark:text-error-400 border-t border-neutral-200 dark:border-neutral-800"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                        <span>Delete</span>
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Back Button */}
-              <button
-                onClick={onBack}
-                className="w-9 h-9 flex items-center justify-center border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-                title="Back to list"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
             </div>
           </div>
         </div>

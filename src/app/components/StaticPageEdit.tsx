@@ -82,12 +82,9 @@ export default function StaticPageEdit({ page, onBack }: StaticPageEditProps) {
       <div className="max-w-[100%] mx-auto">
         {/* PAGE HEADER */}
         <PageHeader
-          title="Static Page Details"
-          breadcrumbs={[
-            { label: 'Configurations', href: '#' },
-            { label: 'Static Pages', onClick: onBack },
-            { label: 'Edit Page', current: true },
-          ]}
+          pageId="static-pages"
+          action="edit"
+          itemName={page.name}
         >
           <div className="flex items-center gap-3">
             <SecondaryButton icon={ArrowLeft} onClick={handleBack}>

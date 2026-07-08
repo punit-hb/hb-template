@@ -541,12 +541,9 @@ export default function LogsManagement({ type }: LogsManagementProps) {
     <div className="p-6 min-h-screen animate-in fade-in duration-500">
       <div className="max-w-[100%] mx-auto space-y-6">
         <PageHeader
-          title={config.title}
+          pageId="logs"
+          action="list"
           subtitle={config.subtitle}
-          breadcrumbs={[
-            { label: 'Logs', href: '#' },
-            { label: config.title, current: true },
-          ]}
         >
           <div className="relative" ref={columnAnchorRef}>
             <SearchBar

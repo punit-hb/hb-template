@@ -109,7 +109,7 @@ export function SiteMap({ onNavigate, currentPage }: SiteMapProps) {
                       }}
                       className="w-full flex items-center justify-between text-left px-3 py-1.5 rounded-lg text-[13px] text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/30 transition-colors group cursor-pointer"
                     >
-                      <span>Go to {getLabel(module.id, module.label)}</span>
+                      <span>{getLabel(module.id, module.label)}</span>
                       <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </button>
                   </div>

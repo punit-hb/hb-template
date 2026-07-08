@@ -37,11 +37,13 @@ import UserDetail from './UserDetail';
 import UserEdit from './UserEdit';
 import { UserStatusModal } from './UserStatusModal';
 import { toast } from 'sonner';
+import { useNavigationHelper } from '../../utils/navigationHelper';
 
 type ViewMode = 'grid' | 'list' | 'table';
 type ViewModeState = 'list' | 'detail' | 'edit';
 
 export default function UserManagement() {
+  const { getPageLabel, getSingularName } = useNavigationHelper();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [users, setUsers] = useState<User[]>(mockUsers);
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,6 +56,19 @@ export default function UserManagement() {
   const [viewModeState, setViewModeState] = useState<ViewModeState>('list');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [showSummary, setShowSummary] = useState(true);
+
+  // Listen for reset-view-state events to go back to listing view
+  useEffect(() => {
+    const handleReset = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail && detail.pageId === "user-management") {
+        setViewModeState('list');
+        setSelectedUser(null);
+      }
+    };
+    window.addEventListener("reset-view-state", handleReset);
+    return () => window.removeEventListener("reset-view-state", handleReset);
+  }, []);
 
   // Column Visibility State
   const [showColumnPanel, setShowColumnPanel] = useState(false);
@@ -333,11 +348,8 @@ export default function UserManagement() {
       <div className="max-w-[100%] mx-auto">
         {/* PAGE HEADER */}
         <PageHeader
-          title="Users"
-          breadcrumbs={[
-            { label: 'User Management', href: '#' },
-            { label: 'Users', current: true },
-          ]}
+          pageId="user-management"
+          action="list"
         >
           <div className="relative" ref={columnAnchorRef}>
             <SearchBar
@@ -346,7 +358,7 @@ export default function UserManagement() {
               onAdvancedSearch={() => setShowAdvancedSearch(true)}
               onToggleColumns={viewMode === 'table' ? () => setShowColumnPanel(!showColumnPanel) : undefined}
               activeFilterCount={filters.filter(f => f.values.length > 0).length}
-              placeholder="Search users..."
+              placeholder={`Search ${getPageLabel("user-management").toLowerCase()}...`}
             />
             <AdvancedSearchPanel
               isOpen={showAdvancedSearch}
@@ -365,8 +377,8 @@ export default function UserManagement() {
             />
           </div>
 
-          <PrimaryButton icon={Plus} onClick={() => toast.info('Add User functionality is coming soon.')}>
-            Add User
+          <PrimaryButton icon={Plus} onClick={() => toast.info(`Add ${getSingularName("user-management")} functionality is coming soon.`)}>
+            Add {getSingularName("user-management")}
           </PrimaryButton>
 
           <IconButton icon={BarChart3} onClick={() => setShowSummary(!showSummary)} title="Summary" />

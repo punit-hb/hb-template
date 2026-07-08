@@ -355,28 +355,11 @@ export default function EmailTemplates() {
       <div className="p-6 bg-neutral-50 dark:bg-neutral-950 min-h-screen">
         <div className="max-w-[100%] mx-auto">
           {/* Top Bar inside edit mode */}
-          <div className="flex items-center justify-between pb-4 mb-6 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 rounded-lg shadow-sm">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setActiveTemplate(null)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
-                title="Back to Templates"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-base font-semibold text-neutral-900 dark:text-white">
-                    {isEditing ? 'Editing Template Layout' : 'Template Workspace'}
-                  </h3>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500">
-                    {activeTemplate.id}
-                  </span>
-                </div>
-                <p className="text-xs text-neutral-400 mt-0.5">Customize real-time contents and review responsiveness</p>
-              </div>
-            </div>
-
+          <PageHeader
+            pageId="email-templates"
+            action="edit"
+            itemName={activeTemplate.name}
+          >
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setActiveTemplate(null)}
@@ -388,7 +371,7 @@ export default function EmailTemplates() {
                 Save Layout
               </PrimaryButton>
             </div>
-          </div>
+          </PageHeader>
 
           {/* Custom Split Screen Architecture */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -615,12 +598,9 @@ export default function EmailTemplates() {
     <div className="p-6 bg-transparent dark:bg-neutral-950 min-h-screen">
       <div className="max-w-[100%] mx-auto">
         <PageHeader
-          title="Email Templates"
+          pageId="email-templates"
+          action="list"
           subtitle="Configure transactional and notification correspondence schemas"
-          breadcrumbs={[
-            { label: 'Configurations', href: '#' },
-            { label: 'Email Templates', current: true },
-          ]}
         >
           <div className="flex items-center gap-2 flex-wrap" ref={columnAnchorRef}>
             <SearchBar

@@ -34,11 +34,13 @@ import { mockEvents, Event } from '../../mockAPI/eventsData';
 import EventDetail from './EventDetail';
 import EventEdit from './EventEdit';
 import { toast } from 'sonner';
+import { useNavigationHelper } from '../../utils/navigationHelper';
 
 type ViewMode = 'grid' | 'list' | 'table';
 type ViewModeState = 'list' | 'detail' | 'edit';
 
 export default function EventManagement() {
+  const { getPageLabel, getSingularName } = useNavigationHelper();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [events, setEvents] = useState<Event[]>(mockEvents);
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,6 +53,19 @@ export default function EventManagement() {
   const [viewModeState, setViewModeState] = useState<ViewModeState>('list');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [showSummary, setShowSummary] = useState(true);
+
+  // Listen for reset-view-state events to go back to listing view
+  useEffect(() => {
+    const handleReset = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail && detail.pageId === "event-management") {
+        setViewModeState('list');
+        setSelectedEvent(null);
+      }
+    };
+    window.addEventListener("reset-view-state", handleReset);
+    return () => window.removeEventListener("reset-view-state", handleReset);
+  }, []);
 
   // Column Visibility State
   const [showColumnPanel, setShowColumnPanel] = useState(false);
@@ -283,11 +298,8 @@ export default function EventManagement() {
       <div className="max-w-[100%] mx-auto">
         {/* PAGE HEADER */}
         <PageHeader
-          title="Event Management"
-          breadcrumbs={[
-            { label: 'Event Management', href: '#' },
-            { label: 'Event Management', current: true },
-          ]}
+          pageId="event-management"
+          action="list"
         >
           <div className="relative" ref={columnAnchorRef}>
             <SearchBar
@@ -296,7 +308,7 @@ export default function EventManagement() {
               onAdvancedSearch={() => setShowAdvancedSearch(true)}
               onToggleColumns={viewMode === 'table' ? () => setShowColumnPanel(!showColumnPanel) : undefined}
               activeFilterCount={filters.filter(f => f.values.length > 0).length}
-              placeholder="Search events..."
+              placeholder={`Search ${getPageLabel("event-management").toLowerCase()}...`}
             />
             <AdvancedSearchPanel
               isOpen={showAdvancedSearch}
@@ -315,8 +327,8 @@ export default function EventManagement() {
             />
           </div>
 
-          <PrimaryButton icon={Plus} onClick={() => toast.info('Event creation is managed by primary hosts only.')}>
-            Add Event
+          <PrimaryButton icon={Plus} onClick={() => toast.info(`Event creation is managed by primary hosts only.`)}>
+            Add {getSingularName("event-management")}
           </PrimaryButton>
 
           <IconButton icon={BarChart3} onClick={() => setShowSummary(!showSummary)} title="Summary" />
@@ -342,10 +354,10 @@ export default function EventManagement() {
           <SummaryWidgets
             title="Event Summary"
             widgets={[
-              { label: 'Total Events', value: events.length, icon: 'Activity' },
-              { label: 'Active Events', value: events.filter(e => e.status === 'active').length, icon: 'CheckCircle' },
-              { label: 'Expired Events', value: events.filter(e => e.status === 'expired').length, icon: 'XCircle' },
-              { label: 'Draft Events', value: events.filter(e => (e as any).status === 'draft').length, icon: 'Clock' },
+              { label: `Total ${getPageLabel("event-management")}`, value: events.length, icon: 'Activity' },
+              { label: `Active ${getPageLabel("event-management")}`, value: events.filter(e => e.status === 'active').length, icon: 'CheckCircle' },
+              { label: `Expired ${getPageLabel("event-management")}`, value: events.filter(e => e.status === 'expired').length, icon: 'XCircle' },
+              { label: `Draft ${getPageLabel("event-management")}`, value: events.filter(e => (e as any).status === 'draft').length, icon: 'Clock' },
             ]}
           />
         )}

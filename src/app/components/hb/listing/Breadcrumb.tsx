@@ -44,21 +44,34 @@ interface BreadcrumbItemProps {
   onClick?: () => void;
 }
 
-export function BreadcrumbItem({ children, href = '#', current = false, onClick }: BreadcrumbItemProps) {
+export function BreadcrumbItem({ children, href, current = false, onClick }: BreadcrumbItemProps) {
   if (current) {
-    return <span className="text-neutral-900 dark:text-white">{children}</span>;
+    return <span className="text-neutral-900 dark:text-white font-medium">{children}</span>;
   }
+
+  const isClickable = !!onClick || !!href;
 
   return (
     <>
-      <a 
-        href={href}
-        onClick={onClick}
-        className="text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-      >
-        {children}
-      </a>
-      <ChevronRight className="w-4 h-4 text-neutral-400 dark:text-neutral-600" />
+      {isClickable ? (
+        <a 
+          href={href || "#"}
+          onClick={(e) => {
+            if (onClick) {
+              e.preventDefault();
+              onClick();
+            }
+          }}
+          className="text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:underline transition-colors cursor-pointer"
+        >
+          {children}
+        </a>
+      ) : (
+        <span className="text-neutral-500 dark:text-neutral-500 cursor-default">
+          {children}
+        </span>
+      )}
+      <ChevronRight className="w-4 h-4 text-neutral-400 dark:text-neutral-600 shrink-0" />
     </>
   );
 }

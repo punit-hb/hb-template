@@ -44,12 +44,10 @@ export default function UserEdit({ user, onBack }: UserEditProps) {
       <div className="max-w-[100%] mx-auto">
         {/* PAGE HEADER */}
         <PageHeader
-          title="Edit User Profile"
-          breadcrumbs={[
-            { label: 'User Management', onClick: onBack },
-            { label: 'View Profile', onClick: onBack },
-            { label: 'Edit', current: true },
-          ]}
+          pageId="user-management"
+          action="edit"
+          itemName={formData.name}
+          onViewClick={onBack}
         >
           <div className="flex items-center gap-3">
             <SecondaryButton icon={ArrowLeft} onClick={onBack}>

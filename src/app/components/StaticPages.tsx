@@ -139,11 +139,8 @@ export default function StaticPages() {
       <div className="max-w-[100%] mx-auto">
         {/* PAGE HEADER */}
         <PageHeader
-          title="Static Pages"
-          breadcrumbs={[
-            { label: 'Configurations', href: '#' },
-            { label: 'Static Pages', current: true },
-          ]}
+          pageId="static-pages"
+          action="list"
         >
           <div className="flex items-center gap-2 flex-wrap" ref={columnAnchorRef}>
             <SearchBar

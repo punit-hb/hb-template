@@ -49,12 +49,10 @@ export default function EventEdit({ event, onBack }: EventEditProps) {
       <div className="max-w-[100%] mx-auto">
         {/* PAGE HEADER */}
         <PageHeader
-          title="Edit Event Details"
-          breadcrumbs={[
-            { label: 'Event Management', onClick: onBack },
-            { label: 'View Details', onClick: onBack },
-            { label: 'Edit', current: true },
-          ]}
+          pageId="event-management"
+          action="edit"
+          itemName={formData.name}
+          onViewClick={onBack}
         >
           <div className="flex items-center gap-3">
             <SecondaryButton icon={ArrowLeft} onClick={onBack}>

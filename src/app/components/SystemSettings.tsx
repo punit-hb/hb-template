@@ -100,12 +100,9 @@ export default function SystemSettings() {
     <div className="p-6 bg-transparent dark:bg-neutral-950 min-h-screen">
       <div className="max-w-[100%] mx-auto">
         <PageHeader
-          title="System Settings"
+          pageId="system-settings"
+          action="list"
           subtitle="Manage global branding, application, communication, and mobile-related configurations."
-          breadcrumbs={[
-            { label: 'Configurations', href: '#' },
-            { label: 'System Settings', current: true },
-          ]}
         />
 
         {/* MANDATORY TABS NAVIGATION */}

@@ -241,12 +241,9 @@ export default function SystemNotifications() {
     <div className="p-6 bg-transparent dark:bg-neutral-950 min-h-screen">
       <div className="max-w-[100%] mx-auto">
         <PageHeader
-          title="System Notifications"
+          pageId="system-notifications"
+          action="list"
           subtitle="Configure global banners, event triggers, and broadcast alert messaging"
-          breadcrumbs={[
-            { label: 'Configurations', href: '#' },
-            { label: 'System Notifications', current: true },
-          ]}
         >
           <div className="flex items-center gap-2 flex-wrap" ref={columnAnchorRef}>
             <SearchBar

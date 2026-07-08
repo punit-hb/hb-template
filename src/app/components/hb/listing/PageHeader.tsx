@@ -63,7 +63,7 @@
  * </PageHeader>
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   MoreVertical,
   Upload,
@@ -81,6 +81,7 @@ import { Breadcrumb, BreadcrumbItem } from './Breadcrumb';
 import { IconButton } from './IconButton';
 import { FlyoutMenu, FlyoutMenuItem, FlyoutMenuDivider } from './FlyoutMenu';
 import { cn } from '../../ui/utils';
+import { useNavigationHelper } from '../../../../utils/navigationHelper';
 
 interface BreadcrumbConfig {
   label: string;
@@ -129,23 +130,60 @@ export interface MoreMenuConfig {
 }
 
 interface PageHeaderProps {
-  title: string;
+  title?: string;
   subtitle?: string;
   breadcrumbs?: BreadcrumbConfig[];
   children?: React.ReactNode;
   className?: string;
   moreMenu?: MoreMenuConfig;
+  pageId?: string;
+  action?: 'list' | 'add' | 'edit' | 'view' | 'detail' | 'history' | 'import' | 'export' | 'settings' | 'clone' | 'audit-logs';
+  itemName?: string;
+  onViewClick?: () => void;
 }
 
 export function PageHeader({
-  title,
+  title: initialTitle,
   subtitle,
-  breadcrumbs,
+  breadcrumbs: initialBreadcrumbs,
   children,
   className = '',
   moreMenu,
+  pageId,
+  action = 'list',
+  itemName,
+  onViewClick,
 }: PageHeaderProps) {
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const { getPageLabel, getDynamicBreadcrumbs } = useNavigationHelper();
+
+  // If pageId is provided, title matches sidebar label exactly, else fallback to initialTitle
+  const title = pageId ? getPageLabel(pageId) : (initialTitle || "");
+
+  // Update browser tab title dynamically
+  useEffect(() => {
+    if (pageId) {
+      const pageLabel = getPageLabel(pageId);
+      if (pageLabel) {
+        document.title = `${pageLabel} | HB Template`;
+      }
+    }
+  }, [pageId, getPageLabel]);
+
+  // Derive breadcrumbs dynamically for all screens
+  let breadcrumbs: BreadcrumbConfig[] | undefined = undefined;
+  if (pageId) {
+    const onNavigate = (window as any).onNavigate;
+    const derived = getDynamicBreadcrumbs(pageId, action as any, itemName, onNavigate, onViewClick);
+    breadcrumbs = derived.map(step => ({
+      label: step.label,
+      current: step.current,
+      onClick: step.onClick,
+      href: step.pageId ? '#' : undefined,
+    }));
+  } else {
+    breadcrumbs = initialBreadcrumbs;
+  }
 
   // Check if More Menu should be shown
   const hasMoreMenu = moreMenu && (

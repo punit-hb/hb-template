@@ -38,6 +38,7 @@ import {
   StatusSlider
 } from './hb/common';
 import { toast } from 'sonner';
+import { useNavigationHelper } from '../../utils/navigationHelper';
 
 type ViewMode = 'grid' | 'list' | 'table';
 
@@ -81,6 +82,7 @@ interface MasterManagementProps {
 }
 
 export default function MasterManagement({ masterType }: MasterManagementProps) {
+  const { getPageLabel, getSingularName } = useNavigationHelper();
   // Enforce Default Card View as per standards
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   
@@ -455,24 +457,19 @@ export default function MasterManagement({ masterType }: MasterManagementProps) 
       <div className="max-w-[100%] mx-auto">
         {/* PAGE HEADER */}
         <PageHeader
-          title={config.title}
-          subtitle={config.subtitle}
-          breadcrumbs={[
-            { label: 'Configurations', href: '#' },
-            { label: 'Master Management', href: '#' },
-            { label: config.title, current: true },
-          ]}
+          pageId={masterType}
+          action="list"
         >
           <div className="flex items-center gap-2 flex-wrap" ref={columnAnchorRef}>
             <SearchBar
               value={searchQuery}
               onChange={setSearchQuery}
               onToggleColumns={viewMode === 'table' ? () => setShowColumnPanel(!showColumnPanel) : undefined}
-              placeholder={`Search ${masterType}s...`}
+              placeholder={`Search ${getPageLabel(masterType).toLowerCase()}...`}
             />
             
             <PrimaryButton icon={Plus} onClick={handleCreateNew}>
-              Add {masterType.charAt(0).toUpperCase() + masterType.slice(1)}
+              Add {getSingularName(masterType)}
             </PrimaryButton>
 
             <IconButton icon={BarChart3} onClick={() => setShowSummary(!showSummary)} title="Summary" />
@@ -508,28 +505,28 @@ export default function MasterManagement({ masterType }: MasterManagementProps) 
           <>
             {masterType === 'country' && (
               <SummaryWidgets
-                title="Country Summary"
+                title={`${getPageLabel(masterType)} Summary`}
                 widgets={[
-                  { label: 'Total Countries', value: countries.length, icon: 'Globe' },
-                  { label: 'Active Countries', value: countries.filter(c => c.status === 'active').length, icon: 'CheckCircle' },
+                  { label: `Total ${getPageLabel(masterType)}`, value: countries.length, icon: 'Globe' },
+                  { label: `Active ${getPageLabel(masterType)}`, value: countries.filter(c => c.status === 'active').length, icon: 'CheckCircle' },
                 ]}
               />
             )}
             {masterType === 'state' && (
               <SummaryWidgets
-                title="State Summary"
+                title={`${getPageLabel(masterType)} Summary`}
                 widgets={[
-                  { label: 'Total States', value: states.length, icon: 'Building2' },
-                  { label: 'Associated Countries', value: new Set(states.map(s => s.countryName).filter(Boolean)).size, icon: 'Globe' },
+                  { label: `Total ${getPageLabel(masterType)}`, value: states.length, icon: 'Building2' },
+                  { label: `Associated ${getPageLabel("country")}`, value: new Set(states.map(s => s.countryName).filter(Boolean)).size, icon: 'Globe' },
                 ]}
               />
             )}
             {masterType === 'city' && (
               <SummaryWidgets
-                title="City Summary"
+                title={`${getPageLabel(masterType)} Summary`}
                 widgets={[
-                  { label: 'Total Cities', value: cities.length, icon: 'MapPin' },
-                  { label: 'Associated States', value: new Set(cities.map(c => c.stateName).filter(Boolean)).size, icon: 'Building2' },
+                  { label: `Total ${getPageLabel(masterType)}`, value: cities.length, icon: 'MapPin' },
+                  { label: `Associated ${getPageLabel("state")}`, value: new Set(cities.map(c => c.stateName).filter(Boolean)).size, icon: 'Building2' },
                 ]}
               />
             )}

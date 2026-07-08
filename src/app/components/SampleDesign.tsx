@@ -555,11 +555,8 @@ export default function SampleDesign() {
       <div className="max-w-[100%] mx-auto">
         {/* ========== PAGE HEADER ========== */}
         <PageHeader
-          title="Employee Management"
-          breadcrumbs={[
-            { label: 'HB Templates', href: '#' },
-            { label: 'Sample Page', current: true },
-          ]}
+          pageId="sample-design"
+          action="list"
         >
           <div className="flex items-center gap-2 flex-wrap" ref={columnAnchorRef}>
             <SearchBar

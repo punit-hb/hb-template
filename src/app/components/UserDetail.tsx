@@ -52,8 +52,22 @@ export default function UserDetail({ user, onBack, onEdit, onToggleStatus }: Use
   return (
     <div className="p-5 md:p-6 bg-transparent dark:bg-neutral-950 px-[8px] py-[8px]">
       <div className="max-w-[100%] mx-auto">
+        {/* PAGE HEADER & BREADCRUMBS */}
+        <PageHeader
+          pageId="user-management"
+          action="view"
+          itemName={user.name}
+        >
+          <SecondaryButton icon={ArrowLeft} onClick={onBack}>
+            Back
+          </SecondaryButton>
+          <PrimaryButton icon={Edit} onClick={onEdit}>
+            Edit Profile
+          </PrimaryButton>
+        </PageHeader>
+
         {/* PROFILE HEADER SECTION */}
-        <div className="mb-6">
+        <div className="mb-6 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-5 shadow-sm">
           <div className="flex items-start justify-between">
             {/* Left Side - User Info */}
             <div className="flex-1">
@@ -93,16 +107,6 @@ export default function UserDetail({ user, onBack, onEdit, onToggleStatus }: Use
                   <span className="text-xs text-neutral-600 dark:text-neutral-400">Standard Account</span>
                 </span>
               </div>
-            </div>
-
-            {/* Right Side - Action Buttons */}
-            <div className="flex items-center gap-2">
-              <SecondaryButton icon={ArrowLeft} onClick={onBack}>
-                Back
-              </SecondaryButton>
-              <PrimaryButton icon={Edit} onClick={onEdit}>
-                Edit Profile
-              </PrimaryButton>
             </div>
           </div>
         </div>

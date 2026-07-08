@@ -51,10 +51,12 @@ import {
 } from './hb/common';
 import { mockRoles, availableModules, Role, ModulePermission } from '../../mockAPI/rolesData';
 import { toast } from 'sonner';
+import { useNavigationHelper } from '../../utils/navigationHelper';
 
 type ViewMode = 'grid' | 'table';
 
 export default function RoleManagement() {
+  const { getPageLabel, getSingularName } = useNavigationHelper();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [isEditing, setIsEditing] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
@@ -336,11 +338,8 @@ export default function RoleManagement() {
     <div className="space-y-6">
       {/* Header */}
       <PageHeader
-        title="Role Management"
-        breadcrumbs={[
-          { label: 'User Management', href: '#' },
-          { label: 'Role Management', current: true },
-        ]}
+        pageId="role-management"
+        action="list"
       >
         <div className="relative" ref={columnAnchorRef}>
           <SearchBar
@@ -348,7 +347,7 @@ export default function RoleManagement() {
             onChange={setSearchQuery}
             onAdvancedSearch={() => setShowAdvancedSearch(true)}
             onToggleColumns={viewMode === 'table' ? () => setShowColumnPanel(!showColumnPanel) : undefined}
-            placeholder="Search roles..."
+            placeholder={`Search ${getPageLabel("role-management").toLowerCase()}...`}
           />
           <ColumnVisibilityPanel
             isOpen={showColumnPanel}
@@ -361,7 +360,7 @@ export default function RoleManagement() {
         </div>
 
         <PrimaryButton icon={Plus} onClick={handleCreate}>
-          Add Role
+          Add {getSingularName("role-management")}
         </PrimaryButton>
 
         <IconButton icon={BarChart3} onClick={() => setShowSummary(!showSummary)} title="Summary" />
@@ -387,9 +386,9 @@ export default function RoleManagement() {
         <SummaryWidgets
           title="Role Summary"
           widgets={[
-            { label: 'Total Roles', value: mockRoles.length, icon: 'Briefcase' },
-            { label: 'Active Roles', value: mockRoles.filter(r => r.status === 'active').length, icon: 'CheckCircle' },
-            { label: 'Inactive Roles', value: mockRoles.filter(r => r.status === 'inactive').length, icon: 'XCircle' },
+            { label: `Total ${getPageLabel("role-management")}`, value: mockRoles.length, icon: 'Shield' },
+            { label: `Active ${getPageLabel("role-management")}`, value: mockRoles.filter(r => r.status === 'active').length, icon: 'CheckCircle' },
+            { label: `Inactive ${getPageLabel("role-management")}`, value: mockRoles.filter(r => r.status === 'inactive').length, icon: 'XCircle' },
           ]}
         />
       )}
@@ -586,11 +585,9 @@ export default function RoleManagement() {
     return (
       <div className="space-y-6">
         <PageHeader
-          title={selectedRole?.id ? 'Edit Role' : 'Create Role'}
-          breadcrumbs={[
-            { label: 'Role Management', href: '#', onClick: handleCancel },
-            { label: selectedRole?.id ? 'Edit Role' : 'Create Role', current: true },
-          ]}
+          pageId="role-management"
+          action={selectedRole?.id ? 'edit' : 'add'}
+          itemName={formData.name}
         >
           <SecondaryButton onClick={handleCancel}>Cancel</SecondaryButton>
           <PrimaryButton onClick={handleSave}>Save Role</PrimaryButton>

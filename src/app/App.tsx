@@ -16,6 +16,7 @@ import RoleManagement from "./components/RoleManagement";
 import LogsManagement from "./components/LogsManagement";
 import LogsPage from "./components/LogsPage";
 import { SiteMap } from "./components/SiteMap";
+import Dashboard from "./components/Dashboard";
 import { FeedbackSystem } from "./components/FeedbackSystem";
 import { GlobalFooter } from "./components/GlobalFooter";
 import { LanguageProvider } from "../i18n/LanguageContext";
@@ -100,7 +101,15 @@ export default function App() {
 
   const handleNavigate = (pageId: string) => {
     setCurrentPage(pageId);
+    window.dispatchEvent(new CustomEvent("reset-view-state", { detail: { pageId } }));
   };
+
+  useEffect(() => {
+    (window as any).onNavigate = handleNavigate;
+    return () => {
+      delete (window as any).onNavigate;
+    };
+  }, []);
 
   return (
     <LanguageProvider>
@@ -171,9 +180,10 @@ export default function App() {
           <LogsPage />
         ) : currentPage === "site-map" ? (
           <SiteMap onNavigate={handleNavigate} currentPage={currentPage} />
+        ) : currentPage === "dashboard" ? (
+          <Dashboard />
         ) : (
           <div className="p-6 text-neutral-500">
-            {currentPage === "dashboard" && "Dashboard - Select a module to preview UI components"}
             {currentPage === "company-profile" && "Company Profile Page"}
             {currentPage !== "dashboard" && currentPage !== "company-profile" && "Select a module to preview UI components"}
           </div>
